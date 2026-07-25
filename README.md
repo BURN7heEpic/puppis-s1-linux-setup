@@ -41,6 +41,18 @@ This project does not configure Puppis firmware/settings.
 sudo ./install.sh
 ```
 
+## Uninstalling
+
+If you want to remove the Puppis Linux setup:
+
+1. Open a terminal inside the `puppis-linux-setup` folder.
+
+2. Run:
+
+```bash
+sudo ./uninstall.sh
+```
+
 
 
 ## Tested on
