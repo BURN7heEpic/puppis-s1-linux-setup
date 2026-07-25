@@ -60,3 +60,20 @@ sudo ./install.sh
   - OVR Toolkit
 
 - It should work with other SteamVR-compatible setups, but I cannot guarantee compatibility with every headset or VR configuration.
+
+## Support / Feedback
+
+This is a community-made project. Feedback, bug reports, and improvements are welcome.
+
+If you run into issues, please open a GitHub Issue and include:
+- Linux distribution and version
+- Hardware setup
+- Any error messages
+- Installer output
+
+For general questions, you can also contact me on Discord:
+`burn7heepic`
+
+
+
+**This project is community-made and is not affiliated with Puppis.**
