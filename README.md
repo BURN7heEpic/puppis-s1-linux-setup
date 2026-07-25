@@ -29,15 +29,17 @@ This project does not configure Puppis firmware/settings.
 
 ## Linux PC setup
 
-Run:
+1. Download `puppis-linux-setup.zip`
 
+2. Extract the zip file.
+
+3. Open a terminal inside the extracted folder.
+
+4. Run:
+
+```bash
 sudo ./install.sh
-
-Then:
-1. Connect Quest to Puppis WiFi
-2. Open Steam Link
-3. Connect to your Linux PC
-4. SteamVR should automatically be open now and running smoothly.
+```
 
 
 
