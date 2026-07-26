@@ -14,33 +14,73 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-if [ ! -f /etc/arch-release ]; then
-    echo "ERROR: This installer is for Arch Linux."
+
+IS_STEAMOS=false
+
+if grep -qi "steamos" /etc/os-release; then
+    IS_STEAMOS=true
+fi
+
+
+if [ "$IS_STEAMOS" = false ] && [ ! -f /etc/arch-release ]; then
+    echo "ERROR: This installer is for Arch Linux or SteamOS."
     exit 1
 fi
 
+
 echo "[+] Checking dependencies..."
 
-if grep -qi "steamos" /etc/os-release; then
-    echo "[+] SteamOS detected, checking dependencies..."
+
+if [ "$IS_STEAMOS" = true ]; then
+
+    echo "[+] SteamOS detected."
+
+    MISSING=""
 
     for cmd in ethtool lsusb nmcli iptables dnsmasq; do
         if ! command -v "$cmd" >/dev/null 2>&1; then
-            echo "ERROR: Missing dependency: $cmd"
-            echo "SteamOS detected. Please install missing packages manually."
-            exit 1
+            MISSING="$MISSING $cmd"
         fi
     done
 
-    echo "[+] All SteamOS dependencies found."
+
+    if [ -n "$MISSING" ]; then
+
+        echo "[+] Missing dependencies:$MISSING"
+
+        echo "[+] Checking SteamOS package keys..."
+
+        if [ ! -d /etc/pacman.d/gnupg ] || [ -z "$(ls -A /etc/pacman.d/gnupg 2>/dev/null)" ]; then
+            echo "[+] Initializing pacman keyring..."
+            pacman-key --init
+            pacman-key --populate
+        else
+            echo "[+] SteamOS keyring already initialized."
+        fi
+
+
+        echo "[+] Installing missing dependencies..."
+
+        pacman -Sy --needed --noconfirm ethtool usbutils networkmanager iptables dnsmasq
+
+    else
+
+        echo "[+] All SteamOS dependencies found."
+
+    fi
+
 
 else
+
     echo "[+] Installing Arch dependencies..."
 
     pacman -Sy --needed --noconfirm ethtool usbutils networkmanager iptables dnsmasq
+
 fi
 
+
 systemctl enable --now NetworkManager
+
 
 echo "[+] Checking Puppis adapter..."
 
@@ -51,7 +91,6 @@ if ! lsusb | grep -q "0b95:1790"; then
 fi
 
 echo "Puppis detected."
-
 
 
 echo "[+] Finding Puppis network interface..."
@@ -65,6 +104,7 @@ PUPPIS_INTERFACE=$(for dev in $(ls /sys/class/net); do
     fi
 done)
 
+
 if [ -z "$PUPPIS_INTERFACE" ]; then
     echo "ERROR: Could not find AX88179 network interface."
     exit 1
@@ -77,6 +117,7 @@ echo "[+] Finding internet interface..."
 
 INTERNET_INTERFACE=$(ip route show default | awk '{print $5}' | head -1)
 
+
 if [ -z "$INTERNET_INTERFACE" ]; then
     echo "ERROR: Could not find internet interface."
     exit 1
@@ -88,6 +129,7 @@ echo "Internet interface: $INTERNET_INTERFACE"
 echo "[+] Finding NetworkManager connection..."
 
 PUPPIS_CONNECTION=$(nmcli -t -f NAME,DEVICE connection show | grep ":$PUPPIS_INTERFACE$" | cut -d: -f1)
+
 
 if [ -z "$PUPPIS_CONNECTION" ]; then
     echo "ERROR: Could not find NetworkManager connection."
@@ -107,13 +149,16 @@ echo "$INTERNET_INTERFACE" > /etc/puppis/internet-device
 echo "$PUPPIS_CONNECTION" > /etc/puppis/pup-connection
 
 
+
 echo "[+] Configuring NetworkManager shared mode..."
 
 nmcli connection modify "$PUPPIS_CONNECTION" ipv4.method shared
 nmcli connection modify "$PUPPIS_CONNECTION" ipv4.addresses 192.168.137.1/24
 nmcli connection modify "$PUPPIS_CONNECTION" connection.autoconnect yes
+
 nmcli connection down "$PUPPIS_CONNECTION" || true
 nmcli connection up "$PUPPIS_CONNECTION"
+
 
 
 echo "[+] Enabling IP forwarding..."
@@ -125,9 +170,11 @@ EOF
 sysctl --system >/dev/null
 
 
+
 echo "[+] Installing Puppis sharing script..."
 
 install -Dm755 scripts/puppis-share.sh /usr/local/bin/puppis-share.sh
+
 
 
 echo "[+] Creating systemd service..."
@@ -149,7 +196,6 @@ EOF
 
 
 systemctl daemon-reload
-
 systemctl enable puppis-share.service
 
 
@@ -157,9 +203,12 @@ echo "[+] Starting Puppis service..."
 
 systemctl restart puppis-share.service
 
+
+
 echo "[+] Installing resume recovery..."
 
 install -Dm755 scripts/puppis-resume.sh /usr/local/bin/puppis-resume.sh
+
 
 cat > /etc/systemd/system/puppis-resume.service <<EOF
 [Unit]
@@ -174,9 +223,12 @@ ExecStart=/usr/local/bin/puppis-resume.sh
 WantedBy=suspend.target
 EOF
 
+
 systemctl daemon-reload
 systemctl enable puppis-resume.service
 systemctl start puppis-resume.service || true
+
+
 
 echo ""
 echo "================================="
