@@ -1,0 +1,7 @@
+[Unit]
+Description=Puppis S1 Resume Recovery
+After=suspend.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/puppis-resume.sh
