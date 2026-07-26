@@ -14,8 +14,20 @@ The installer automatically detects your Linux distribution and runs the correct
 
 ## Installation
 
-Clone the repository:
+Clone the repository and run the installer:
 
 ```bash
 git clone https://github.com/BURN7heEpic/puppis-s1-linux-setup.git
 cd puppis-s1-linux-setup
+sudo ./install.sh
+```
+
+## Contact
+
+For questions, issues, or suggestions, feel free to contact me.
+
+GitHub:
+https://github.com/BURN7heEpic
+
+For bugs, opening a GitHub issue is preferred so problems and solutions can be tracked at:  
+https://github.com/BURN7heEpic/puppis-s1-linux-setup/issues

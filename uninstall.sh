@@ -15,8 +15,6 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 
-# Manual override
-
 case "$1" in
     --ubuntu)
         echo "[+] Manual override: Ubuntu/Debian"
@@ -31,8 +29,6 @@ case "$1" in
         ;;
 esac
 
-
-# Detect Linux distribution
 
 if [ ! -f /etc/os-release ]; then
     echo "ERROR: Cannot detect Linux distribution."
