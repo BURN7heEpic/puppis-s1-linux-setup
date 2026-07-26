@@ -22,6 +22,19 @@ cd puppis-s1-linux-setup
 sudo ./install.sh
 ```
 
+## SteamOS Notes
+
+SteamOS is supported.
+
+The installer may need to install missing dependencies using pacman. 
+If SteamOS package keys are not initialized, the installer will automatically initialize the package keyring.
+
+For SteamOS, you may need to disable the read-only filesystem first:
+
+```bash
+sudo steamos-readonly disable
+```
+
 ## Contact
 
 For questions, issues, or suggestions, feel free to contact me.
