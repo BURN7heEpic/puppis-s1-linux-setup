@@ -84,7 +84,7 @@ The two projects solve different parts of the Linux support problem and can comp
 The Puppis S1 can also be configured using the official PrismXR methods:
 
 - Windows application (Requires access to a Windows installation)
-    - PrismXR Windows desktop application can be downloaded [here](https://cdn.shopify.com/s/files/1/0769/5368/2221/files/PrismXR_Desktop.exe?v=1756793839) (Will download instantly)
+    - PrismXR Windows desktop application can be downloaded [here](https://cdn.shopify.com/s/files/1/0769/5368/2221/files/PrismXR_Desktop.exe?v=1756793839)
 - PrismXR mobile app 
     - PDF with instructions can be found [here](https://cdn.shopify.com/s/files/1/0769/5368/2221/files/P1411_Puppis_S1_User_Manual_V1.1_43e7fd23-2c4b-4e8e-8bf0-b4050369a7ff.pdf?v=1713714347#page=14)
 
