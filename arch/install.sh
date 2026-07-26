@@ -19,9 +19,26 @@ if [ ! -f /etc/arch-release ]; then
     exit 1
 fi
 
-echo "[+] Installing dependencies..."
+echo "[+] Checking dependencies..."
 
-pacman -Sy --needed --noconfirm ethtool usbutils networkmanager iptables dnsmasq
+if grep -qi "steamos" /etc/os-release; then
+    echo "[+] SteamOS detected, checking dependencies..."
+
+    for cmd in ethtool lsusb nmcli iptables dnsmasq; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            echo "ERROR: Missing dependency: $cmd"
+            echo "SteamOS detected. Please install missing packages manually."
+            exit 1
+        fi
+    done
+
+    echo "[+] All SteamOS dependencies found."
+
+else
+    echo "[+] Installing Arch dependencies..."
+
+    pacman -Sy --needed --noconfirm ethtool usbutils networkmanager iptables dnsmasq
+fi
 
 systemctl enable --now NetworkManager
 
